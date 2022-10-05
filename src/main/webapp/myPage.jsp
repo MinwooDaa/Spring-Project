@@ -27,7 +27,7 @@
 <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
 <link rel="stylesheet" href="css/style.css" type="text/css">
 <link rel="stylesheet" href="css/myPage.css" type="text/css">
-<link rel="stylesheet" href="css/modal2.css" type="text/css">
+<link rel="stylesheet" href="css/modal.css" type="text/css">
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"
 	integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
 	crossorigin="anonymous"></script>
@@ -73,14 +73,14 @@
 			<table class="table table-bordered" id="mypageHeader">
 				<tr>
 					<td class="text-center align-middle"
-						style="width: 20%; background-color: #212529; color: #ffffff; font-size: 1.4em; font-weight: 600;">닉네임</td>
+						style="width: 20%; background-color: #212529; color: #ffffff; font-size: 1.4em; font-weight: 600;">${data.mname}님 안녕하세요!</td>
 					<td class="align-middle" style="width: 20%">
 						<div class="row" onclick="pointEffect()" id="point">
 							<div class="col-md-8 col-lg-3">
 								<i class="fab fa-product-hunt"></i><br />
 							</div>
 							<div class="col-md-4 col-lg-9">
-								<span>적립금</span><br> <span class="emphasis">적립금</span>
+								<span>적립금</span><br> <span class="emphasis">${data.mileage }</span>
 								<div class="square square-1"></div>
 								<div class="square square-2"></div>
 								<div class="circle circle-1"></div>
@@ -133,57 +133,53 @@
 							</ul>
 						</div>
 					</div>
-					<div class="col-md-4 col-lg-9 bg-light">
+					<div class="col-md-4 col-lg-9">
 							<br><br>
 						<div class="text-left">
 						<h5>내 정보 수정 </h5>
 						<br>
-						<table class="table table-bordered">
+						<form name='addressForm'>
+						<table class="table table-borderless">
 							<tr>
-								<td>아이디</td>
-								<td>아이디</td>
+								<td style="width:200px">아이디</td>
+								<td><input style="border:none;" type="text" value='${data.mid }' name="mid" readonly="readonly"></td>
 							</tr>
 							<tr>
 								<td>이름</td>
-								<td>이름</td>
+								<td><input type="text" class="form-control" value='${data.mname }' name="mname"></td>
 							</tr>
 							<tr>
 								<td>비밀번호</td>
-								<td>비밀번호</td>
+								<td><input type="password" class="form-control" value='${data.mpw }' name="mpw"></td>
 							</tr>
 							<tr>
 								<td>휴대폰 번호</td>
-								<td>휴대폰 번호</td>
-							</tr>
-							<tr>
-								<td>주소</td>
-								<td>주소</td>
+								<td><input type="text" class="form-control" value='${data.mphone }' name="mphone"></td>
 							</tr>
 							<tr>
 								<td colspan="2">
-									<form name="addressForm">
 										<div class="form-group">
 											<div class="input-group mb-1">
 												<div class="input-group-prepend">
-													<span class="input-group-text">주소</span>
+													<span style="background:#fff;" class="input-group-text">주소</span>
 												</div>
-												<input type="text" name="addrCode" id="add_zone"
-													placeholder="우편번호" class="form-control" required>
+												<input  style="background:#fff;" type="text" name="addrCode" id="add_zone"
+													placeholder="${data.zipcode}" class="form-control" readonly="readonly" required>
 												<input style="height:37px; line-height:6px;" id="searchAdd" type="button" value="우편번호찾기"
 													class="primary-btn"><br>
 											</div>
 											<div class="input-group">
-												<input type="text" name="addr1" id="add_load"
-													class="form-control" placeholder="도로명주소" required>
+												<input style="background:#fff;" type="text" name="addr1" id="add_load" readonly="readonly"
+													class="form-control" placeholder="${data.streetaddress}" required>
 												<span id="guide" style="color: #999; display: none"></span>
-												<input type="text" name="address"
+												<input type="text" name="address" value="${data.address }"
 													class="form-control" placeholder="상세주소" required>
 											</div>
 										</div>
-									</form>
 								</td>
 							</tr>
 						</table>
+						</form>
 					</div>
 					<div class="text-center">
 					<button type="submit" class="primary-btn">정보 수정</button>
@@ -193,45 +189,39 @@
 				</div>
 			</div>
 		</div>
-		
-		<div class="modal" id="delete">
-		<div class="modal-dialog">
-			<div class="modal-content">
+		<div class="row">
+	<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header border-bottom-0">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="text-center"><p style="font-size:13px; color:black" class="top-txt">회원탈퇴</p>
+	      </div>
+	      <hr>
+	      <div class="modal-body">
+	        <div class="d-flex flex-column text-center">
+	          <form action="deleteM.do">
+	            <div class="form-group">
+	              <input type="text" class="form-control" id="mid" placeholder="아이디를 입력해주세요.">
+	            </div>
+	            <div class="form-group">
+	              <input type="password" class="form-control" id="mpw" placeholder="비밀번호를 입력해주세요.">
+	            </div>
+	            <button type="submit" class="btn btn-dark btn-block btn-round">회원탈퇴</button>
+	          </form>
+	          
+	        </div>
+	        <br>
+	      </div>
+	    </div>
 
-				<!-- Modal Header -->
-				<div class="modal-header">
-					<div class="text-center">
-			          <h4>회원탈퇴</h4>
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-				</div>
-				</div>
-
-				<!-- Modal body -->
-				<div class="modal-body">
-					<!-- 닫기 섹션 -->
-					<section class="top-close">
-						<p class="top-txt">정말 회원탈퇴를 하실건가요?</p>
-						<a class="close" href="./Modalpop.html"> <img
-							src="images/Vector 2.png" alt=""> <img
-							src="images/Vector 3.png" alt="">
-						</a>
-					</section>
-					<!-- 입력창 -->
-					<section class="user-input">
-						<br>
-						<form action="" method="post" class="user-input">
-							<label for="id"></label> <input class="inp-id" type="text"
-								id="id" name="mid" value="" required placeholder="아이디"> <label
-								for="pw"></label> <input class="inp-pw" type="password"
-								id="pw" name="mpw" value="" required placeholder="비밀번호">
-							<div class="check-wrap"></div>
-							<button class="primary-btn" type="submit">회원탈퇴</button>
-						</form>
-					</section>
-				</div>
-			</div>
-		</div>
+	  </div>
 	</div>
+	</div>
+
 
 		<script>
 			function pointEffect() {
@@ -274,8 +264,5 @@
 		       });
 		   }
 		</script>
-	
-	
 </body>
-
 </html>
