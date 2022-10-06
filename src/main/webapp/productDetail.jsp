@@ -65,7 +65,9 @@
                   <div>
                   </div>
                   </div>
-                  <div class="col-lg-6" style="border:1px solid black; padding:5%; padding-bottom: 1%; padding-top: 1%;">
+                  
+				<form class="col-lg-6" action="pay.do?pid=${product.pid}&pcnt=${product.pcnt}" method="post" style="display : inline; margin:0px;">
+                  <div class="col-lg-12" style="border:1px solid black; padding:3%;padding-bottom: 1%;padding-top: 4%;">
                      <div class="product__details__text">
                      	<div class="producttext" style="text-align:initial;">
                         <h4>${product.pname }</h4>
@@ -77,6 +79,7 @@
                         <br>
                         <br>
                         <div style="margin-left:16%;">
+                      					     
                         <table>
                     	    <tbody>
          						<tr>
@@ -95,6 +98,8 @@
          							<th scope="row" style="text-align: left; padding-bottom: 15px;">치수</th>
          							<td style="padding-left: 100px; margin-top: 15px; text-align: left; padding-bottom: 15px;">${product.psize }cm</td>
          						</tr>
+         						
+         						
          						<tr>
          							<th scope="row" style="text-align: left; margin-top: 20px;">수량</th>
          							<td>
@@ -123,15 +128,25 @@
                         	</tbody>
                         </table>
                         </div>
-                        <a href="/cart.do" class="primary-btn">장바구니 담기</a>
+                        <div>
+							
+                        <a href="/cart.do" class="primary-btn" style="border-radius: 30px;border: 1px solid black;background:white;color: #333 !important;">장바구니 담기</a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="hidden" value="${product.pid }${product.pcnt}">
+                        <input type="submit" class="primary-btn" style="border-radius: 30px;" value="바로 구매하기">
+							
+                        </div>
+                        <br>
                         <br>
                         <br>
                         <div class="product__details__btns__option">
-                          <a href="#"><i class="fa fa-heart"></i> 찜하기</a>
+                          <img id="fav_btn" src="img/icon/heart.png" alt="좋아요비활성화" onclick="favorite(${product.pid});"> 찜하기
                         </div>
                      </div>
                   </div>
-
+				</form>
+				
+				
                </div>
             </div>
          </div>
@@ -146,16 +161,17 @@
                                 <li class="nav-item">
                                     <a class="nav-link active" data-toggle="tab" href="#tabs-5"role="tab">상품설명</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#tabs-6"role="tab">배송안내</a>
-                                </li>
                             </ul>
                             <br>
                             <div class="tab-content">
                             <img src="img/official.jpg" alt="" >
+                            <br>
+                            <br>
+                            <br>
+                            <img src="img/productm.png" alt="" style="padding:7%">
                                 <div class="tab-pane active" id="tabs-5" role="tabpanel">
                                     <div class="product__details__tab__content">
-                                        <p class="note">${product.pdetail }</p>
+                                        <img alt="" src="${product.pdetail }" style="padding:11%">
                                     </div>
                                 </div>
                                     </div>
@@ -217,6 +233,59 @@
         </div>
     </div>
     <!-- Search End -->
+<script type="text/javascript">
+function cart(){
+      
+         var cnt = $('#cnt').val();
+         var pid = $('#pid').val();
+         $.ajax({   
+            type : 'POST',
+            url : 'cart.do',
+            data :  {
+               'cnt': cnt,
+               'pid': pid
+            },
+            success : function(result) {
+               
+               if (result == 'success') {
+                  $("#btn-cart").text("장바구니 담기완료!");
+                  $("#btn-cart").attr('disabled','disabled');
+                  }
+               
+               } 
+            });
+         }
+</script>
+
+<script type="text/javascript">
+      function favorite(pid) {
+         var mid = '${data.mid}';
+         console.log('로그: Favorite');
+         $.ajax({
+            type : 'POST',
+            url : 'favorite.do',
+            data : {
+               mid : mid,
+               pid : pid
+            },
+            success : function(result) {
+               console.log("로그1 [" + result + "]");
+               if (result == 1) {
+                  console.log("로그2 [좋아요+1]");
+                  $("#fav_btn").prop("src", "./img/icon/heartOn.png");
+               } else if(result == 0){
+                  console.log("로그3 [좋아요-1]");
+                  $("#fav_btn").prop("src", "./img/icon/heart.png");
+               }
+            },
+            error : function(request, status, error) { 
+               console.log("상태코드: " + request.status);
+               console.log("메세지: " + request.responseText);
+               console.log("에러설명: " + error);
+            }
+         });
+      }
+   </script>
 
     <!-- Js Plugins -->
     <script src="js/jquery-3.3.1.min.js"></script>
