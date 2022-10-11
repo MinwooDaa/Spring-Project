@@ -60,17 +60,17 @@
                <div class="row">
                   <div class="col-lg-6" >
                   <div class="product__details__pic__item">
-                     <img src="img/figure/${product.pid }.png" alt="" style="margin-top: 25%; margin-block: auto; border: 1px solid black; padding: 1%">
+                     <img src="${product.pimg}" alt="상품이미지" style="margin-top: 25%; margin-block: auto; border: 1px solid black; padding: 1%">
                   </div>
                   <div>
                   </div>
                   </div>
                   
-				<form class="col-lg-6" action="pay.do?pid=${product.pid}&pcnt=${product.pcnt}" method="post" style="display : inline; margin:0px;">
+				<form class="col-lg-6" action="cartP.do" method="post" style="display : inline; margin:0px;">
                   <div class="col-lg-12" style="border:1px solid black; padding:3%;padding-bottom: 1%;padding-top: 4%;">
                      <div class="product__details__text">
                      	<div class="producttext" style="text-align:initial;">
-                        <h4>${product.pname }</h4>
+                        <h4>${product.pname}</h4>
                         <br>
                      	</div>
                         <h4 style=" margin-right: 45%;">
@@ -102,11 +102,13 @@
          						
          						<tr>
          							<th scope="row" style="text-align: left; margin-top: 20px;">수량</th>
+         							
          							<td>
 										<div class="product__details__cart__option" >
                       					     <div class="quantity" >
                            					   <div class="pro-qty" scope="row"style="text-align: center; margin-top: 20px; margin-left: 100px;">
-                              					   <input type="text" value="1" readonly>
+                              					   <input type="text" value="1" id="cnt" name="cnt" readonly>
+                              					   
                            					   </div>
                           				 </div>
                      					 </div>
@@ -114,6 +116,7 @@
          						</tr>
                       		  </tbody>
                         </table>
+                        ${product.pid}
                         </div>
 						 
                         <hr>
@@ -123,16 +126,23 @@
                         		<tr>
                                  	<th scope="row" style="width: 35%; text-align: left; padding-bottom: 25px;">총 구매금액</th>
          							<td style="padding-left: 0px; margin-top: 20px; text-align: left; padding-bottom: 25px;">
-         							<strong><input type="text" class="mbox" value="${product.price }" style="border:none;  width: 55%;color: #ff6623; font-size: 26px; font-weight: 700;">원</strong></td>
+         							<strong><input type="text" class="mbox" value="${product.price}" style="border:none;  width: 55%;color: #ff6623; font-size: 26px; font-weight: 700;">원</strong></td>
                         		</tr>
                         	</tbody>
                         </table>
                         </div>
                         <div>
-							
-                        <a href="/cart.do" class="primary-btn" style="border-radius: 30px;border: 1px solid black;background:white;color: #333 !important;">장바구니 담기</a>
+						<c:choose>
+							<c:when test="${product.status==1}">
+                        <button type="button" class="primary-btn" id="btn-cart" onclick="cart(${product.pid});"style="border-radius: 30px;border: 1px solid black;background:white;color: #333 !important;" disabled="disabled">장바구니 담기완료</button>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="hidden" value="${product.pid }${product.pcnt}">
+                        </c:when>
+                        <c:otherwise>
+                        <button type="button" class="primary-btn" id="btn-cart" onclick="cart(${product.pid});"style="border-radius: 30px;border: 1px solid black;background:white;color: #333 !important;">장바구니 담기</button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </c:otherwise>
+                        </c:choose>	
+                  	<input type="hidden" name="pid" value="${product.pid}">
                         <input type="submit" class="primary-btn" style="border-radius: 30px;" value="바로 구매하기">
 							
                         </div>
@@ -140,7 +150,21 @@
                         <br>
                         <br>
                         <div class="product__details__btns__option">
-                          <img id="fav_btn" src="img/icon/heart.png" alt="좋아요비활성화" onclick="favorite(${product.pid});"> 찜하기
+                         <!-- 로그인 상태 -->
+						<c:if test="${user.mid!=null}">
+							<c:choose>
+								<c:when test="${product.fav==1}"><!-- 좋아요 되어있는 상품인지 확인 -->
+			                          <img id="${product.pid}fav_btn" src="img/icon/heartOn.png" alt="좋아요비활성화" onclick="favorite(${product.pid});"> 찜하기
+								</c:when>
+								<c:otherwise>
+			                          <img id="${product.pid}fav_btn" src="img/icon/heart.png" alt="좋아요비활성화" onclick="favorite(${product.pid});"> 찜하기
+                		           </c:otherwise>
+							</c:choose>
+                        </c:if>
+						<!-- 비로그인 상태 -->
+						<c:if test="${user.mid == null}">
+							 <img id="${product.pid}fav_btn" src="img/icon/heart.png" alt="좋아요비활성화" onclick="favoriteN(${product.pid});"> 찜하기
+                        </c:if>
                         </div>
                      </div>
                   </div>
@@ -202,7 +226,6 @@
                             <span class="label">New</span>
                             <ul class="product__hover">
                                 <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
-                                <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
                             </ul>
                         </div>
                         <div class="product__item__text">
@@ -234,10 +257,11 @@
     </div>
     <!-- Search End -->
 <script type="text/javascript">
-function cart(){
+function cart(pid){
       
          var cnt = $('#cnt').val();
-         var pid = $('#pid').val();
+         
+         console.log(pid);
          $.ajax({   
             type : 'POST',
             url : 'cart.do',
@@ -257,9 +281,9 @@ function cart(){
          }
 </script>
 
-<script type="text/javascript">
+  <script type="text/javascript">
       function favorite(pid) {
-         var mid = '${data.mid}';
+         var mid = '${user.mid}';
          console.log('로그: Favorite');
          $.ajax({
             type : 'POST',
@@ -272,10 +296,10 @@ function cart(){
                console.log("로그1 [" + result + "]");
                if (result == 1) {
                   console.log("로그2 [좋아요+1]");
-                  $("#fav_btn").prop("src", "./img/icon/heartOn.png");
+                  $('#'+pid+'fav_btn').prop("src", "./img/icon/heartOn.png");
                } else if(result == 0){
                   console.log("로그3 [좋아요-1]");
-                  $("#fav_btn").prop("src", "./img/icon/heart.png");
+                  $('#'+pid+'fav_btn').prop("src", "./img/icon/heart.png");
                }
             },
             error : function(request, status, error) { 
@@ -285,8 +309,12 @@ function cart(){
             }
          });
       }
+      
+      function favoriteN(pid) {
+    	  alert('로그인 후 이용해주세요.')
+      }
    </script>
-
+   
     <!-- Js Plugins -->
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>

@@ -1,5 +1,7 @@
 package com.bb.biz.favorite.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,10 @@ public class FavoriteServiceImpl implements FavoriteService{
 	@Override
 	public FavoriteVO selectOneFavorite(FavoriteVO vo) {
 		return favoriteDAO.selectOneFavorite(vo);
+	}
+	@Override
+	public List<FavoriteVO> selectAllFavorite(FavoriteVO vo) {
+		return favoriteDAO.selectAllFavorite(vo);
 	}
 
 }

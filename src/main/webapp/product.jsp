@@ -177,24 +177,42 @@
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="shop__product__option__right">
                                     <p>가격순으로 보기:</p>
-                                    <select>
-                                        <option value="">낮은 금액부터</option>
-                                        <option value="">높은 금액부터</option>
-                                    </select>
+                                    <select name="pdetail" onchange="sortPrice()" id="sortPrice">
+	                                   <option>----</option>
+	                                   <option value="low" >낮은 금액부터</option>
+	                                   <option value="high" >높은 금액부터</option>
+	                         </select>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" id="figures">
                     	<!-- 상품 뽑아낼 반복문 위치 -->
                      <c:forEach var="n" items="${products}" begin="1" end="24">
-                        <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="col-lg-4 col-md-6 col-sm-6 figure">
                             <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="img/figure/${n.pid }.png">
+                                <div class="product__item__pic set-bg">
+                                  <a href="boardP.do?pid=${n.pid}">
+                                  <img src="${n.pimg}"alt="" width="280" height="280"></a>
                                     <ul class="product__hover">
-                            		    <li><img id="fav_btn" src="img/icon/heart.png" alt="좋아요비활성화" onclick="favorite(${n.pid});"></li>
-                            		    <li><a href="boardP.do?pid=${n.pid}"><img src="img/icon/search.png" alt=""></a></li>
-                                    </ul>
+                        <!-- 로그인 상태 -->
+						<c:if test="${user.mid!=null}">
+							<c:choose>
+								<c:when test="${n.fav==1}"><!-- 좋아요 되어있는 상품인지 확인 -->
+        		                        <li><img id="${n.pid}fav_btn" src="img/icon/heartOn.png" alt="좋아요활성화" onclick="favorite(${n.pid});"></li>
+								</c:when>
+								<c:otherwise>
+        		                        <li><img id="${n.pid}fav_btn" src="img/icon/heart.png" alt="좋아요비활성화" onclick="favorite(${n.pid});"></li>
+                		           </c:otherwise>
+							</c:choose>
+                        </c:if>
+                        
+                        <!-- 비로그인 상태 -->
+						<c:if test="${user.mid == null}">
+                                <li><img id="${n.pid}fav_btn" src="img/icon/heart.png" alt="좋아요비활성화" onclick="favoriteN(${n.pid});"></li>
+                        </c:if>
+                        
+                		           </ul>
                                 </div>
                                  <div class="product__item__text">
                                     <h6>${n.pname }</h6>
@@ -205,94 +223,22 @@
                         </c:forEach>
                         <!-- 상품 뽑아낼 반복문 끝 위치 -->
                     </div>
-                    
-                    
                     <!-- 더보기 버튼 자리 -->
-                    
-                    
+					<div>
+					<hr>
+					<a id="moreProduct" href="javascript:b();" style="background-color: white;color: black;margin-left: 48%;border: 1px solid black;border-radius: 30px;padding: 1%;">
+					더 보기( More )</a>
+					<input type="hidden" id="cnt" value="24">
+					</div>                    
                 </div>
             </div>
         </div>
     </section>
     <!-- Shop Section End -->
 
-    <!-- Footer Section Begin -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="footer__about">
-                        <div class="footer__logo">
-                            <a href="#"><img src="img/footer-logo.png" alt=""></a>
-                        </div>
-                        <p>The customer is at the heart of our unique business model, which includes design.</p>
-                        <a href="#"><img src="img/payment.png" alt=""></a>
-                    </div>
-                </div>
-                <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>Shopping</h6>
-                        <ul>
-                            <li><a href="#">Clothing Store</a></li>
-                            <li><a href="#">Trending Shoes</a></li>
-                            <li><a href="#">Accessories</a></li>
-                            <li><a href="#">Sale</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>Shopping</h6>
-                        <ul>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Payment Methods</a></li>
-                            <li><a href="#">Delivary</a></li>
-                            <li><a href="#">Return & Exchanges</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>NewLetter</h6>
-                        <div class="footer__newslatter">
-                            <p>Be the first to know about new arrivals, look books, sales & promos!</p>
-                            <form action="#">
-                                <input type="text" placeholder="Your email">
-                                <button type="submit"><span class="icon_mail_alt"></span></button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <div class="footer__copyright__text">
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        <p>Copyright ©
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script>2020
-                            All rights reserved | This template is made with <i class="fa fa-heart-o"
-                            aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                        </p>
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- Footer Section End -->
 
-    <!-- Search Begin -->
-    <div class="search-model">
-        <div class="h-100 d-flex align-items-center justify-content-center">
-            <div class="search-close-switch">+</div>
-            <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
-            </form>
-        </div>
-    </div>
-    <!-- Search End -->
+<hearder:footer/>
+
 
     <!-- Js Plugins -->
     <script src="js/jquery-3.3.1.min.js"></script>
@@ -305,9 +251,86 @@
     <script src="js/mixitup.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
-        <script type="text/javascript">
+    
+          <script type="text/javascript"> // 더보기 스크립트
+                    function b(){
+                     var cnt = $('#cnt').val();
+                    	console.log("b()함수에 진입");
+                    	$.ajax({
+                    		url : "selectAllPajax.do",
+                    		type : "POST",
+                    		data : { "cnt" : cnt // 위 벨류에서 가져온 cnt를 controller 로 보냈다.
+                    			
+                    		},
+                    		success : function(result){  // controller 에서 받은 hm 이 result 로 들어가고 pro/more 사용 가능
+                    			console.log("b함수 실행 중");
+                    			console.log(result);
+                    			console.log(cnt);
+                    			if(result.more==1){
+                    			for(var n of result.pro){
+                    				var product = "<div class='col-lg-4 col-md-6 col-sm-6 figure'>";
+                    				
+                    				product += "<div class='product__item'>";
+                    				product += "<div class='product__item__pic set-bg'>";
+                    				product += "<img alt='이미지' src='"+n.pimg+"'>";
+                    				product += "<ul class='product__hover'>";
+                    				product += "<li><a href='favorite.jsp'><img src='img/icon/heart.png' alt=''></a></li>";
+                    				product += "<li><a href='boardP.do?pid="+n.pid+"'><img src='img/icon/search.png' alt=''></a></li>";
+                    				product += "<ul>";
+                    				product += "</div>";
+                    				product += "<div class='product__item__text'>";
+                    				product += "<h6>"+n.pname+"</h6>";
+                    				product += "<h5>"+n.price+"원</h5>";
+                    				product += "</div>";
+                    				product += "</div>";
+                    				product += "</div>";
+                    				
+                    				$('#figures').append(product);
+                    				
+                    			}	
+                    				cnt = Number(cnt);
+                    				var cnt2 = 24;
+                    				console.log(cnt+cnt2);
+                    				$('#cnt').val(cnt+cnt2);
+                    			}
+                    			else {
+                    				for(var n of result.pro){
+                        				var product = "<div class='col-lg-4 col-md-6 col-sm-6 figure'>";
+                        				
+                        				product += "<div class='product__item'>";
+                        				product += "<div class='product__item__pic set-bg'>";
+                        				product += "<img alt='이미지' src='"+n.pimg+"'>";
+                        				product += "<ul class='product__hover'>";
+                        				product += "<li><a href='favorite.jsp'><img src='img/icon/heart.png' alt=''></a></li>";
+                        				product += "<li><a href='boardP.do?pid="+n.pid+"'><img src='img/icon/search.png' alt=''></a></li>";
+                        				product += "<ul>";
+                        				product += "</div>";
+                        				product += "<div class='product__item__text'>";
+                        				product += "<h6>"+n.pname+"</h6>";
+                        				product += "<h5>"+n.price+"원</h5>";
+                        				product += "</div>";
+                        				product += "</div>";
+                        				product += "</div>";
+                        				
+                        				$('#figures').append(product);
+                        				
+                        			}
+                    				
+                    				$("#moreProduct").remove();
+                    			}
+                    			
+                    		}, error : function(request, status, error){
+                    			console.log("상태코드 :" + request.status);
+                    			console.log("메세지 :" + request.responseText);
+                    			console.log("에러설명 :" + error);
+                    		}
+                    	});
+                    	}
+                    </script>
+    
+    <script type="text/javascript">
       function favorite(pid) {
-         var mid = '${data.mid}';
+         var mid = '${user.mid}';
          console.log('로그: Favorite');
          $.ajax({
             type : 'POST',
@@ -320,10 +343,10 @@
                console.log("로그1 [" + result + "]");
                if (result == 1) {
                   console.log("로그2 [좋아요+1]");
-                  $("#fav_btn").prop("src", "./img/icon/heartOn.png");
+                  $('#'+pid+'fav_btn').prop("src", "./img/icon/heartOn.png");
                } else if(result == 0){
                   console.log("로그3 [좋아요-1]");
-                  $("#fav_btn").prop("src", "./img/icon/heart.png");
+                  $('#'+pid+'fav_btn').prop("src", "./img/icon/heart.png");
                }
             },
             error : function(request, status, error) { 
@@ -333,7 +356,58 @@
             }
          });
       }
+      
+      function favoriteN(pid) {
+    	  alert('로그인 후 이용해주세요.')
+      }
    </script>
+
+                    <script type="text/javascript">
+						function sortPrice(){
+						      
+						         var sortPrice = $("#sortPrice").val();
+						         console.log("정렬 [" + sortPrice + "]");
+						         $.ajax({   
+						            type : "post",
+						            url : "sortPrice.do",
+						            data :  {
+						            	"pdetail": sortPrice
+						            },
+						            success : function(result) {
+						                console.log(result);
+										$('.figure').remove();
+										
+										for(var n of result){
+											
+											var item = "<div class='col-lg-4 col-md-6 col-sm-6 figure'>";
+
+											item += "<div class='product__item'>";
+											item += "<div class='product__item__pic set-bg'>";
+											item += "<img alt='이미지' src='"+n.pimg+"'>";
+											item += "<ul class='product__hover'>";
+											item +=	"<li><a href='favorite.jsp'><img src='img/icon/heart.png' alt=''></a></li>";
+											item += "<li><a href='boardP.do?pid="+n.pid+"'><img src='img/icon/search.png' alt=''></a></li>";
+											item += "</ul>";
+											item += "</div>";
+											item += "<div class='product__item__text'>";
+											item += "<h6>"+n.pname+"</h6>";
+											item += "<h5>"+n.price+"원</h5>";
+											item += "</div>";
+											item += "</div>";
+											item += "</div>";
+											
+											$('#figures').append(item);
+										}
+										
+						             },
+						             error : function(request, status, error) { // 순서 체크해보기!
+						                console.log("상태코드: " + request.status);
+						                console.log("메세지: " + request.responseText);
+						                console.log("에러설명: " + error);
+						             }
+						          });
+						         }
+					</script>
     
 </body>
 

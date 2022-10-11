@@ -70,36 +70,8 @@
     <!-- Hero Section End -->
 
 	<hr>
-		<img alt="" src="img/WEEK.png" style="padding-right: 15%;padding-left: 20%;">
-                <div class="row product__filter" style="padding: 10%; padding-top: 2%;">
-            <!-- 상품 뽑아낼 반복문 위치 -->
-            <c:forEach var="n" items="${products}" begin="1" end="4">
-                <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" >
-                        <a href="boardP.do?pid=${n.pid}"><img src="${n.pimg}"
-								alt="" width="280" height="280"></a>
-                            <ul class="product__hover">
-                                <li><img id="fav_btn" src="img/icon/heart.png" alt="좋아요비활성화" onclick="favorite(${n.pid});"></li>
-                                <li><a href="boardP.do?pid=${n.pid}"><img src="img/icon/search.png" alt=""></a></li>
-                            </ul>
-                        </div>
-                        <div class="productitem_">
-                            <h6 style="font-weight: 600;">${n.pname}</h6>
-                            <h5 style="font-weight: 800;">
-                            <fmt:formatNumber pattern="###,###,###" value="${n.price}"/>원</h5>
-                        </div>
-                    </div>
-                </div>
-                </c:forEach>
-                <!-- 상품 뽑아낼 반복문 끝나는 위치 -->
-            </div>
-    
-    
-    
-    
-    
-    
+	<br>
+	<br>
 
     <!-- Product Section Begin -->
     <section class="product spad">
@@ -117,12 +89,27 @@
                 <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
                     <div class="product__item">
                     <div class="product__item__pic set-bg" >
-                        <a href="boardP.do?pid=${n.pid}"><img src="${n.pimg}"
-								alt="" width="280" height="280"></a>
-                            <ul class="product__hover">
-                                <li><img id="fav_btn" src="img/icon/heart.png" alt="좋아요비활성화" onclick="favorite(${n.pid});"></li>
-                                <li><a href="boardP.do?pid=${n.pid}"><img src="img/icon/search.png" alt=""></a></li>
-                           </ul>
+                        <a href="boardP.do?pid=${n.pid}">
+                        <img src="${n.pimg}" alt="" width="280" height="280"></a>
+		                   <ul class="product__hover">
+		                 <!-- 로그인 상태 -->
+						<c:if test="${user.mid!=null}">
+							<c:choose>
+								<c:when test="${n.fav==1}"><!-- 좋아요 되어있는 상품인지 확인 -->
+        		                        <li><img id="${n.pid}fav_btn" src="img/icon/heartOn.png" alt="좋아요활성화" onclick="favorite(${n.pid});"></li>
+								</c:when>
+								<c:otherwise>
+        		                        <li><img id="${n.pid}fav_btn" src="img/icon/heart.png" alt="좋아요비활성화" onclick="favorite(${n.pid});"></li>
+                		           </c:otherwise>
+							</c:choose>
+                        </c:if>
+                        
+                        <!-- 비로그인 상태 -->
+						<c:if test="${user.mid == null}">
+                                <li><img id="${n.pid}fav_btn" src="img/icon/heart.png" alt="좋아요비활성화" onclick="favoriteN(${n.pid});"></li>
+                        </c:if>
+                        
+                		           </ul>
                         </div>
                         <br>
                         <div class="productitem_">
@@ -155,9 +142,9 @@
     <script src="js/mixitup.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
-     <script type="text/javascript">
+    <script type="text/javascript">
       function favorite(pid) {
-         var mid = '${data.mid}';
+         var mid = '${user.mid}';
          console.log('로그: Favorite');
          $.ajax({
             type : 'POST',
@@ -170,10 +157,10 @@
                console.log("로그1 [" + result + "]");
                if (result == 1) {
                   console.log("로그2 [좋아요+1]");
-                  $("#fav_btn").prop("src", "./img/icon/heartOn.png");
+                  $('#'+pid+'fav_btn').prop("src", "./img/icon/heartOn.png");
                } else if(result == 0){
                   console.log("로그3 [좋아요-1]");
-                  $("#fav_btn").prop("src", "./img/icon/heart.png");
+                  $('#'+pid+'fav_btn').prop("src", "./img/icon/heart.png");
                }
             },
             error : function(request, status, error) { 
@@ -182,6 +169,10 @@
                console.log("에러설명: " + error);
             }
          });
+      }
+      
+      function favoriteN(pid) {
+    	  alert('로그인 후 이용해주세요.')
       }
    </script>
 <<<<<<< HEAD

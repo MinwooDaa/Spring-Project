@@ -18,14 +18,14 @@ public class CouponDAO {
 	private JdbcTemplate jdbcTemplate;
 	
 	final String sql_insert="INSERT INTO COUPON(CID,CODE,DCRATE,CSTATUS,MID) "
-			+ "VALUES((SELECT NVL(MAX(CID),0)+1 FROM COUPON),?,?,?,?";
+			+ "VALUES((SELECT NVL(MAX(CID),0)+1 FROM COUPON),?,?,?,?)";
 	
 
 	final String sql_updateCI="UPDATE COUPON SET CSTATUS=CSTATUS+1 WHERE CID=?";
 	final String sql_updateCD="UPDATE COUPON SET CSTATUS=CSTATUS-1 WHERE CID=?";
 	
 	
-	final String sql_selectAll="SELECT * FROM COUPON ORDER BY BID DESC";
+	final String sql_selectAll="SELECT * FROM COUPON WHERE CSTATUS=1 ORDER BY CID ASC";
 
 
 	boolean insertCoupon(CouponVO vo) {
@@ -61,7 +61,7 @@ class CouponRowMapper implements RowMapper<CouponVO>{
 		CouponVO data = new CouponVO();
 		data.setCid(rs.getInt("CID"));
 		data.setCode(rs.getString("CODE"));
-		data.setDcrate(rs.getString("DCRATE"));
+		data.setDcrate(rs.getDouble("DCRATE"));
 		data.setCstatus(rs.getInt("CSTATUS"));
 		data.setMid(rs.getString("MID"));
 		return data;

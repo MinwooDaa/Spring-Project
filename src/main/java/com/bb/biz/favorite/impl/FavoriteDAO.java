@@ -24,10 +24,14 @@ public class FavoriteDAO {
 	
 	final String sql_delete="DELETE FROM FAVORITE WHERE MID=? AND PID=?";
 	final String sql_selectOne="SELECT * FROM FAVORITE WHERE MID=? AND PID=?";
+
+	final String sql_selectAllFavorite="SELECT * FROM FAVORITE LEFT OUTER JOIN PRODUCT ON FAVORITE.PID=PRODUCT.PID WHERE MID=? ORDER BY FID ASC";
 	
+	
+
 	public boolean insertFavorite(FavoriteVO vo) {
-			jdbcTemplate.update(sql_insert,vo.getMid(),vo.getPid());
-			return true;
+		jdbcTemplate.update(sql_insert,vo.getMid(),vo.getPid());
+		return true;
 	}
 	public boolean deleteFavorite(FavoriteVO vo) {
 		jdbcTemplate.update(sql_delete,vo.getMid(),vo.getPid());
@@ -42,6 +46,10 @@ public class FavoriteDAO {
 			return null;
 		}
 	}
+	public List<FavoriteVO> selectAllFavorite(FavoriteVO vo) {
+		Object[] args= {vo.getMid()};
+		return jdbcTemplate.query(sql_selectAllFavorite,args,new FavoriteRowMapper2());
+		}
 	
 	
 }
@@ -53,6 +61,21 @@ class FavoriteRowMapper implements RowMapper<FavoriteVO>{
 		data.setFid(rs.getInt("FID"));
 		data.setMid(rs.getString("MID"));
 		data.setPid(rs.getInt("PID"));
+		return data;
+	}
+	
+}
+class FavoriteRowMapper2 implements RowMapper<FavoriteVO>{
+	
+	@Override
+	public FavoriteVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+		FavoriteVO data = new FavoriteVO();
+		data.setFid(rs.getInt("FID"));
+		data.setMid(rs.getString("MID"));
+		data.setPid(rs.getInt("PID"));
+		data.setPimg(rs.getString("PIMG"));
+		data.setPname(rs.getString("PNAME"));
+		data.setPrice(rs.getInt("PRICE"));
 		return data;
 	}
 	

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="hearder" tagdir="/WEB-INF/tags" %>
+<%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <!DOCTYPE html>
 
 <html lang="zxx">
@@ -37,9 +38,7 @@
     <!-- 폰트 어썸 -->
 <script src="https://kit.fontawesome.com/9bd2faeab5.js"
 	crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.6.1.min.js"
-	integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
-	crossorigin="anonymous"></script>
+
 	
 	<style>
     .total_info_div {
@@ -47,10 +46,11 @@
         top: 400px;
     }
 	</style>
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 </head>
 
 <body>
-   
+
     <hearder:header/>
     			<!-- Breadcrumb Section Begin -->
 			   <section class="breadcrumb-option">
@@ -75,14 +75,13 @@
 			<div class="content_main">
 			<div class="row">
 			<div class="col-lg-8">
-
-
 				<!-- 상품 정보 -->
 				<div class="orderGoods_div">
 					<!-- 상품 종류 -->
 					<div class="goods_kind_div">
 						주문상품 <span style="color:red" class="goods_kind_div_count">3</span>개
 					</div>
+					<c:if test="${pay!=null}">
 					<!-- 상품 테이블 -->
 					<table class="table table-borderless">
 						<tbody>
@@ -94,13 +93,43 @@
 							</tr>
 							<tr>
 								<td><img src="${pay.pimg}"
-								alt="" width="100" height="100"></td>
+								alt="상품 사진" width="100" height="100"></td>
 								<td>${pay.pname}</td>
 								<td>${pay.cnt}</td>
 								<td>${pay.price}</td>
 							</tr>
 						</tbody>
 					</table>
+					</c:if>
+					<c:if test="${pay==null }">
+					<!-- 상품 테이블 -->
+					<table class="table table-borderless">
+						<tbody>
+							<tr>
+								<th>상품사진</th>
+								<th>상품명</th>
+								<th>가격</th>
+								<th>구매수량</th>
+								<th>합계</th>
+							</tr>
+							<c:forEach var="cart" items="${cart}">
+								<tr class="cart_price">
+								<td><img src="${cart.pimg }" 
+								alt="상품 사진" width="100" height="100"></td>
+								<td>${cart.pname}</td>
+								<td>${cart.price}</td>
+								<td>${cart.cnt}</td>
+								<td>${cart.price*cart.cnt}</td>
+								</tr>
+								<tr>
+								<td class="goods_table_price_td">
+									<input type="hidden" class="cart_price" value="${cart.price}">
+									<input type="hidden" class="cart_cnt" value="${cart.cnt}">
+								</td></tr>
+								</c:forEach>
+						</tbody>
+					</table>
+					</c:if>
 				</div>		
 				<hr>
 					<!-- 배송지 정보 -->
@@ -115,11 +144,11 @@
 							<table style="border-collapse: separate; border-spacing: 0 10px;">
 								<tr>
 									<th style="width:13%">주문자</th>
-									<td>${data.mname}</td>
+									<td>${user.mname}</td>
 								</tr>
 								<tr>
 									<th><span>주소</span></th>
-									<td><input style="width:70% "type="text" id="" value="${data.streetaddress} ${data.address}"
+									<td><input style="width:70% "type="text" id="" value="${user.streetaddress} ${user.address}"
 											readonly="readonly"></td>
 								</tr>
 								</tbody>
@@ -131,22 +160,22 @@
 								<tbody>
 									<tr>
 										<th>주문자</th>
-										<td>${data.mname}</td>
+										<td>${user.mname}</td>
 									</tr>
 									<tr>
 										<th><span>주소</span></th>
-										<td><input style="width:70% "type="text" value="${data.zipcode}" id="add_zone"
+										<td><input style="width:70% "type="text" value="${user.zipcode}" id="add_zone"
 											placeholder="우편번호" readonly="readonly"><button style="width:30%; height:37px" type="button" id="searchAdd"
 												class="btn btn-dark">우편번호 검색</button></td>
 									</tr>
 									<tr>
 										<th></th>
 										<td colspan="2"><input type="text"
-											id="add_load" value="${data.streetaddress}" placeholder="도로명 주소" readonly="readonly"></td>
+											id="add_load" value="${user.streetaddress}" placeholder="도로명 주소" readonly="readonly"></td>
 									</tr>
 									<tr>
 										<th></th>
-										<td colspan="2"><input type="text" value="${data.address}"
+										<td colspan="2"><input type="text" value="${user.address}"
 											name="address" placeholder="상세 주소"></td>
 									</tr>
 									</tbody>
@@ -186,23 +215,7 @@
 					</div>
 					<p>쿠폰과 적립금 중 하나의 할인 방식을 선택해주세요.</p>
 				</div>		
-				<script>
-					$('.ds').on('click', function() {
-					    var valueCheck = $('.ds:checked').val(); // 체크된 Radio 버튼의 값을 가져온다.
-					    
-					    if ( valueCheck == '적립금' ) {
-					        $('.order_point_input').attr('disabled', false); 
-					        $('.coupon_select').prop("disabled", true);
-					        $('.order_point_input').focus(); 
-					    } 
-					    else {
-					        $('.order_point_input').attr('disabled', true); 
-					        $('.coupon_select').prop("disabled", false);
-					        $('.coupon_select').focus();
-					        console.log($('.coupon_select_h').attr('disabled', false));
-					    }
-					});
-				</script>
+
 				<!-- 쿠폰 정보 -->
 				<div class="coupon_div" >
 					<div class="coupon_div_subject">쿠폰</div>
@@ -215,10 +228,11 @@
 							<tr>
 								<th>쿠폰 사용</th>
 								<td>
-									<select style="width:70%" class="coupon_select" name="select_name">
-										<option>쿠폰 목록1</option>
-										<option>쿠폰 목록2</option>
-										<option>쿠폰 목록3</option>
+									<select style="width:70%" class="coupon_select" id="select_coupon" onchange='coupon()' name="select_name">
+										<option>쿠폰 선택</option>
+										<c:forEach var="c" items="${coupon}">
+										<option>${c}</option>
+										</c:forEach>
 									</select>
 								</td>
 							</tr>
@@ -238,7 +252,7 @@
 							<tr>
 								<th>포인트 사용</th>
 								<td>
-									${data.mileage} <input style="width:70%" class="order_point_input" disabled value="0">원&nbsp;&nbsp;&nbsp;
+									<input style="width:70%" class="order_point_input" onkeyup='point()' disabled value="0">&nbsp;&nbsp;&nbsp;
 									<a style="color:#fff" class="order_point_input_btn order_point_input_btn_N" data-state="N">모두사용</a>
 									<a class="order_point_input_btn order_point_input_btn_Y" data-state="Y" style="display: none; color:#fff;">사용취소</a>
 								</td>
@@ -262,11 +276,11 @@
 						</colgroup>
 							<tr>
 								<th>주문자</th>
-								<td>${data.mname}</td>
+								<td>${user.mname}</td>
 							</tr>
 							<tr>
 								<th>휴대폰번호</th>
-								<td>${data.mphone}</td>
+								<td>${user.mphone}</td>
 							</tr>
 						</table>
 					</div>
@@ -288,9 +302,9 @@
 								<span class="price_span_label">배송비</span>
 								<span class="delivery_price_span">100000</span>원
 							</li>
-																					<li>
+							<li>
 								<span class="price_span_label">할인금액</span>
-								<span class="usePoint_span">100000</span>원
+								<span class="usePoint_span"></span>원
 							</li>
 							<li class="price_total_li">
 								<strong class="price_span_label total_price_label">최종 결제 금액</strong>
@@ -308,7 +322,7 @@
 					</div>
 					<!-- 버튼 영역 -->
 					<div class="total_info_btn_div">
-						<a style="color:#fff"class="order_btn" id="check_module">결제하기</a>
+						<a style="color:#fff" class="order_btn" id="check_module">결제하기</a>
 					</div>
 				</div>
 				
@@ -316,41 +330,134 @@
 				<br><br><br><br><br><br><br><br>
 			</div>
 
-				<!-- 주문 요청 form -->
-			<form class="order_form" action="/order" method="post">
-				<!-- 주문자 회원번호 -->
-				<input name="memberId" value="${memberInfo.memberId}" type="hidden">
-				<!-- 주소록 & 받는이-->
-				<input name="addressee" type="hidden">
-				<input name="memberAddr1" type="hidden">
-				<input name="memberAddr2" type="hidden">
-				<input name="memberAddr3" type="hidden">
-				<!-- 사용 포인트 -->
-				<input name="usePoint" type="hidden">
-				<!-- 상품 정보 -->
-			</form>
 		</div>
 		</div>
 	</div>
 	<hearder:footer/>
-
+		
+	<script type="text/javascript">
+		var finalTotalPrice=0;
+	function setInfo(){
+		var totalPrice=0;
+		var totalCount=0;
+		var delivery_price=0;
+		var totalPoint=0;
+		$(".goods_table_price_td").each(function(index, element){
+			// 총 가격
+			totalPrice += $(element).find(".cart_price").val()*$(element).find(".cart_cnt").val();
+			// 총 갯수
+			console.log(totalPrice);
+		});	
+			/* 배송비 결정 */
+			if(totalPrice >= 30000){
+				delivery_price = 0;
+			} else if(totalPrice == 0){
+				delivery_price = 0;
+			} else {
+				delivery_price = 3000;	
+			}
+			// 배송비
+			$(".delivery_price_span").text(delivery_price.toLocaleString());	
+			
+			usePoint = $(".order_point_input").val();
+			$(".usePoint_span").text(usePoint.toLocaleString());
+			console.log(usePoint.toLocaleString());
+			// 물건 가격
+			$(".totalPrice_span").text(totalPrice.toLocaleString());
+			finalTotalPrice = totalPrice + delivery_price - usePoint;
+			console.log(finalTotalPrice);
+			totalPoint = totalPrice*0.01;
+			
+			// 최종 가격(총 가격 + 배송비)
+			$(".finalTotalPrice_span").text(finalTotalPrice.toLocaleString());
+			// 총 마일리지
+			$(".totalPoint_span").text(totalPoint.toLocaleString());
+	}
+</script>
 <script>
-	$('.ds').on('click', function() {
-	    var valueCheck = $('.ds:checked').val(); // 체크된 Radio 버튼의 값을 가져온다.
-	    
-	    if ( valueCheck == '적립금' ) {
-	        $('.order_point_input').attr('disabled', false); 
-	        $('.order_point_input').focus(); 
-	    } 
-	    else {
-	    	$('.order_point_input').text('쿠폰 사용시 적립금 사용은 불가능합니다.');
-	        $('.order_point_input').attr('disabled', true); 
-	        $('.coupon_select').attr('disabled', false);
-	        $('.coupon_select').focus();
-	        console.log($('.coupon_select').attr('disabled', false));
-	    }
+$(function(){
+	setInfo();
 	});
 </script>
+<script>
+var usePoint=0;
+var finalTotalPrice=0;
+	function coupon() {
+		var totalPrice = 0;
+		var totalCount = 0;
+		var delivery_price = 0;
+		var totalPoint = 0;
+
+		$(".goods_table_price_td").each(
+				function(index, element) {
+					// 총 가격
+					totalPrice += $(element).find(".cart_price").val()
+							* $(element).find(".cart_cnt").val();
+					// 총 갯수
+					console.log(totalPrice);
+				});
+		/* 배송비 결정 */
+		if (totalPrice >= 30000) {
+			delivery_price = 0;
+		} else if (totalPrice == 0) {
+			delivery_price = 0;
+		} else {
+			delivery_price = 3000;
+		}
+		// 배송비
+		$(".delivery_price_span").text(delivery_price.toLocaleString());
+
+		var coupon = $("#select_coupon option:selected").val();
+		if (coupon == '고객감사쿠폰20%') {
+			usePoint = totalPrice * 0.2;
+		} else {
+			usePoint = totalPrice * 0.1;
+		}
+		alert(usePoint);
+		$(".usePoint_span").text(usePoint.toLocaleString());
+		console.log(usePoint.toLocaleString());
+		// 물건 가격
+		$(".totalPrice_span").text(totalPrice.toLocaleString());
+		finalTotalPrice = totalPrice + delivery_price - usePoint;
+		console.log(finalTotalPrice);
+		totalPoint = totalPrice * 0.01;
+
+		// 최종 가격(총 가격 + 배송비)
+		$(".finalTotalPrice_span").text(finalTotalPrice.toLocaleString());
+		// 총 마일리지
+		$(".totalPoint_span").text(totalPoint.toLocaleString());
+	}
+</script>
+	<script>
+	var usePoint =0;
+	function point(){
+		if (window.event.keyCode == 13) {
+			usePoint = $(".order_point_input").val();
+			console.log(usePoint);
+	    	// 할인 금액
+	    	$(".usePoint_span").text(usePoint.toLocaleString());
+	    	console.log(typeof(usePoint));
+		}
+	}
+	</script>
+	<script>
+	$('.ds').on('click', function() {
+
+	    var valueCheck = $('.ds:checked').val(); // 체크된 Radio 버튼의 값을 가져온다.
+	    if ( valueCheck == '적립금' ) {
+	        $('.order_point_input').attr('disabled', false); 
+	        $('.coupon_select').prop("disabled", true);
+	        $('.order_point_input').focus();
+	    }
+	    else {
+	        $('.order_point_input').attr('disabled', true); 
+	        $('.coupon_select').prop("disabled", false);
+	        $('.order_point_input').val(0);
+	        $('.coupon_select').focus();
+	    }
+		setInfo();
+	});
+	</script>
 <script>
 
 /* 주소입력란 버튼 동작(숨김, 등장) */
@@ -419,19 +526,14 @@ function execution_daum_address(){
                 // 커서를 상세주소 필드로 이동한다.
                 $(".address3_input").attr("readonly", false);
                 $(".address3_input").focus();	 
-	            
-	            
 	        }
 	    }).open();  	
-	
 }
-
-
 /* 포인트 입력 */
 //0 이상 & 최대 포인트 수 이하
 $(".order_point_input").on("propertychange change keyup paste input", function(){
 
-	const maxPoint = parseInt('${memberInfo.point}');	
+	const maxPoint = parseInt('${user.mileage}');	
 	
 	let inputValue = parseInt($(this).val());	
 	
@@ -442,17 +544,15 @@ $(".order_point_input").on("propertychange change keyup paste input", function()
 	}	
 	
 	/* 주문 조합정보란 최신화 */
-	setTotalInfo();	
+	setInfo();	
 	
 });
-
-
 /* 포인트 모두사용 취소 버튼 
  * Y: 모두사용 상태 / N : 모두 취소 상태
  */
 $(".order_point_input_btn").on("click", function(){
 
-	const maxPoint = parseInt('${memberInfo.point}');	
+	const maxPoint = parseInt('${user.mileage}');	
 	
 	let state = $(this).data("state");	
 	
@@ -475,96 +575,16 @@ $(".order_point_input_btn").on("click", function(){
 	}	
 	
 	/* 주문 조합정보란 최신화 */
-	setTotalInfo();	
-	
+	setInfo();	
 });
-
-
-/* 총 주문 정보 세팅(배송비, 총 가격, 마일리지, 물품 수, 종류) */
-function setTotalInfo(){
-
-	let totalPrice = 0;				// 총 가격
-	let totalCount = 0;				// 총 갯수
-	let totalKind = 0;				// 총 종류
-	let totalPoint = 0;				// 총 마일리지
-	let deliveryPrice = 0;			// 배송비
-	let usePoint = 0;				// 사용 포인트(할인가격)
-	let finalTotalPrice = 0; 		// 최종 가격(총 가격 + 배송비)	
-	
-	$(".goods_table_price_td").each(function(index, element){
-		// 총 가격
-		totalPrice += parseInt($(element).find(".individual_totalPrice_input").val());
-		// 총 갯수
-		totalCount += parseInt($(element).find(".individual_bookCount_input").val());
-		// 총 종류
-		totalKind += 1;
-		// 총 마일리지
-		totalPoint += parseInt($(element).find(".individual_totalPoint_input").val());
-	});	
-
-	/* 배송비 결정 */
-	if(totalPrice >= 30000){
-		deliveryPrice = 0;
-	} else if(totalPrice == 0){
-		deliveryPrice = 0;
-	} else {
-		deliveryPrice = 3000;	
-	}
-	
-	finalTotalPrice = totalPrice + deliveryPrice;	
-	
-	/* 사용 포인트 */
-	usePoint = $(".order_point_input").val();
-	
-	finalTotalPrice = totalPrice - usePoint;	
-	
-	/* 값 삽입 */
-	// 총 가격
-	$(".totalPrice_span").text(totalPrice.toLocaleString());
-	// 총 갯수
-	$(".goods_kind_div_count").text(totalCount);
-	// 총 종류
-	$(".goods_kind_div_kind").text(totalKind);
-	// 총 마일리지
-	$(".totalPoint_span").text(totalPoint.toLocaleString());
-	// 배송비
-	$(".delivery_price_span").text(deliveryPrice.toLocaleString());	
-	// 최종 가격(총 가격 + 배송비)
-	$(".finalTotalPrice_span").text(finalTotalPrice.toLocaleString());		
-	// 할인가(사용 포인트)
-	$(".usePoint_span").text(usePoint.toLocaleString());	
-	
-}
 
 /* 주문 요청 */
 $(".order_btn").on("click", function(){
-
-	/* 주소 정보 & 받는이*/
-	$(".addressInfo_input_div").each(function(i, obj){
-		if($(obj).find(".selectAddress").val() === 'T'){
-			$("input[name='addressee']").val($(obj).find(".addressee_input").val());
-			$("input[name='memberAddr1']").val($(obj).find(".address1_input").val());
-			$("input[name='memberAddr2']").val($(obj).find(".address2_input").val());
-			$("input[name='memberAddr3']").val($(obj).find(".address3_input").val());
-		}
-	});	
 	
-	/* 사용 포인트 */
-	$("input[name='usePoint']").val($(".order_point_input").val());	
+	/* 데이트피커 값 넣기 */
+	$("input[name='shipping']").val($("#from").val());	
 	
-	/* 상품정보 */
-	let form_contents = ''; 
-	$(".goods_table_price_td").each(function(index, element){
-		let bookId = $(element).find(".individual_bookId_input").val();
-		let bookCount = $(element).find(".individual_bookCount_input").val();
-		let bookId_input = "<input name='orders[" + index + "].bookId' type='hidden' value='" + bookId + "'>";
-		form_contents += bookId_input;
-		let bookCount_input = "<input name='orders[" + index + "].bookCount' type='hidden' value='" + bookCount + "'>";
-		form_contents += bookCount_input;
-	});	
-	$(".order_form").append(form_contents);	
-	
-	/* 서버 전송 */
+	/* 전송 */
 	$(".order_form").submit();	
 	
 });	
@@ -585,68 +605,77 @@ $(document).ready(function () {
 });
 </script>
 
-    <!-- Js Plugins -->
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.nice-select.min.js"></script>
-    <script src="js/jquery.nicescroll.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/jquery.countdown.min.js"></script>
-    <script src="js/jquery.slicknav.js"></script>
-    <script src="js/mixitup.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/main.js"></script>
-    <!-- 결제 -->
-    <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <script>
+	<!-- Js Plugins -->
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.nice-select.min.js"></script>
+	<script src="js/jquery.nicescroll.min.js"></script>
+	<script src="js/jquery.magnific-popup.min.js"></script>
+	<script src="js/jquery.countdown.min.js"></script>
+	<script src="js/jquery.slicknav.js"></script>
+	<script src="js/mixitup.min.js"></script>
+	<script src="js/owl.carousel.min.js"></script>
+	<script src="js/main.js"></script>
+	<!-- 결제 -->
+	<script type="text/javascript"
+		src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+	<script type="text/javascript"
+		src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+		
+	<script>
    $("#check_module").click(function () {
-      var IMP = window.IMP; // 생략가능
-      IMP.init('imp17445447'); 
-      // i'mport 관리자 페이지 -> 내정보 -> 가맹점식별코드
-      // ''안에 띄어쓰기 없이 가맹점 식별코드를 붙여넣어주세요. 안그러면 결제창이 안뜹니다.
-      IMP.request_pay({
-         pg: 'html5_inicis',
-         pay_method: 'card',
-         merchant_uid: 'merchant_' + new Date().getTime(),
-         /* `
-          *  merchant_uid에 경우 
-          *  https://docs.iamport.kr/implementation/payment
-          *  위에 url에 따라가시면 넣을 수 있는 방법이 있습니다.
-          */
-         name: '주문명 : 아메리카노',
-         // 결제창에서 보여질 이름
-         // name: '주문명 : ${auction.a_title}',
-         // 위와같이 model에 담은 정보를 넣어 쓸수도 있습니다.
-         amount: 100,
-         // amount: ${bid.b_bid},
-         // 가격 
-         buyer_name: '이름',
-         // 구매자 이름, 구매자 정보도 model값으로 바꿀 수 있습니다.
-         // 구매자 정보에 여러가지도 있으므로, 자세한 내용은 맨 위 링크를 참고해주세요.
-         buyer_postcode: '123-456',
-         
-         }, function (rsp) {
-            console.log(rsp);
-         if (rsp.success) {
-            var msg = '결제가 완료되었습니다.';
-            msg += '결제 금액 : ' + rsp.paid_amount;
-            // success.submit();
-            // 결제 성공 시 정보를 넘겨줘야한다면 body에 form을 만든 뒤 위의 코드를 사용하는 방법이 있습니다.
-            // 자세한 설명은 구글링으로 보시는게 좋습니다.
-         } else {
-            var msg = '결제에 실패하였습니다.';
-            msg += '에러내용 : ' + rsp.error_msg;
-         }
-         alert(msg);
-         location.href='payment.jsp';
-      });
-   }); 
+	      var IMP = window.IMP; // 생략가능
+	      IMP.init('imp17445447'); 
+	      // i'mport 관리자 페이지 -> 내정보 -> 가맹점식별코드
+	      // ''안에 띄어쓰기 없이 가맹점 식별코드를 붙여넣어주세요. 안그러면 결제창이 안뜹니다.
+	      IMP.request_pay({
+	         pg: 'html5_inicis',
+	         pay_method: 'card',
+	         merchant_uid: 'merchant_' + new Date().getTime(),
+	         /* `
+	          *  merchant_uid에 경우 
+	          *  https://docs.iamport.kr/implementation/payment
+	          *  위에 url에 따라가시면 넣을 수 있는 방법이 있습니다.
+	          */
+	         name: '${cart[0].pname}',
+	         // 결제창에서 보여질 이름
+	         // name: '주문명 : ${auction.a_title}',
+	         // 위와같이 model에 담은 정보를 넣어 쓸수도 있습니다.
+	         amount: finalTotalPrice,
+	         // amount: ${bid.b_bid},
+	         // 가격 
+	         buyer_name: '${user.mname}',
+	         // 구매자 이름, 구매자 정보도 model값으로 바꿀 수 있습니다.
+	         // 구매자 정보에 여러가지도 있으므로, 자세한 내용은 맨 위 링크를 참고해주세요.
+	         buyer_postcode: '123-456',
+	         
+	         }, function (rsp) {
+	            console.log(rsp);
+	         if (rsp.success) {
+	            var msg = '결제가 완료되었습니다.';
+	            msg += '결제 금액 : ' + rsp.paid_amount;
+	            // success.submit();
+	            // 결제 성공 시 정보를 넘겨줘야한다면 body에 form을 만든 뒤 위의 코드를 사용하는 방법이 있습니다.
+	            // 자세한 설명은 구글링으로 보시는게 좋습니다.
+	         } else {
+	            var msg = '결제에 실패하였습니다.';
+	            msg += '에러내용 : ' + rsp.error_msg;
+	         }
+	         alert(msg);
+	         location.href='insertB.do?mid='+${user.mid}+'&pid='+${cart[0].pid}+'&buycnt='+${cart[0].cnt}+'&shipping'+shipping;
+	      });
+	   }); 
 	</script>
-    <!-- 데이트피커 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
+	<!-- 데이트피커 -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+		integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+		integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script>
     // 데이트피커 한글화
 	$.datepicker.setDefaults({
 		  dateFormat: 'yy-mm-dd',
