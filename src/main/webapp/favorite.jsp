@@ -13,7 +13,7 @@
 <meta name="keywords" content="Male_Fashion, unica, creative, html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>찜목록</title>
+<title>PinaGunGong</title>
 
 <!-- Google Font -->
 <link
@@ -21,6 +21,8 @@
 	rel="stylesheet">
 
 <!-- Css Styles -->
+    <link rel="shorycut icon" href="img/pavi.png" type="image/png">
+	<link rel="apple-touch-icon" href="img/pavi.png">
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
 <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
 <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
@@ -33,37 +35,23 @@
 <body>
 	<hearder:header />
 
-
-	<!-- Breadcrumb Section Begin -->
-	<section class="breadcrumb-option">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="breadcrumb__text">
-						<h4>찜목록</h4>
-						<div class="breadcrumb__links">
-							<a href="./index.html">Home</a> <a href="./shop.html">Shop</a> <span>찜목록</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- Breadcrumb Section End -->
-
 	<!-- Shopping Cart Section Begin -->
 	<section class="shopping-cart spad">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="shopping__cart__table">
-						<table>
+						<table style="text-align:center;">
+						<colgroup>
+							<col width="25%">
+							<col width="*">
+							<col width="15%">
+						</colgroup>
 							<thead>
 								<tr>
-									<th style="width: 60%;">Product</th>
-									<th style="width: 20%;">Quantity</th>
-									<th style="width: 10%;">Total</th>
-									<th></th>
+									<th>상품사진</th>
+									<th>상품명 & 가격</th>
+									<th>찜삭제</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -80,31 +68,21 @@
 							<c:forEach var="f" items="${favorite}">								
 								<tr id="${f.pid}">
 									<td>
-									<input type="checkbox">
-									
-									</td>
-									<!-- 크롤링한 이미지 삽입 -->
-									<td class="product__cart__item">
 										<div class="product__cart__item__pic">
 											 <a href="boardP.do?pid=${f.pid}">
 											<img src="${f.pimg}" style="width:90px;"alt="img"></a>
 										</div>
-
+									</td>
+									<!-- 크롤링한 이미지 삽입 -->
+									<td class="product__cart__item">
 										<div class="product__cart__item__text">
-											<h6>${f.pname}</h6>
+											<a href="boardP.do?pid=${f.pid}"><h6>${f.pname}</h6></a>
 									<h6><span class="product_price"><fmt:formatNumber value="${f.price}" pattern="#,###,### 원"/></span>
 												</h6>
 										</div>
-									</td>
-									<td class="quantity__item">
-										<div class="quantity">
-											<div class="pro-qty-2">
-											</div>
-												<button type="button" class="primary-btn" id="btn-cart" onclick="cartU();" style="size:inherit;">변경</button>
-										</div>
-									</td>									
+									</td>							
 									<td class="cart__close"><button onclick="favD(${f.pid})"><i
-											class="fa fa-close"></i></button>></td>
+											class="fa fa-close"></i></button></td>
 								</tr>
 								</c:forEach>
 								<!-- For each문 끝 -->
@@ -115,14 +93,17 @@
 					</div>
 					<div class="row">
 						<div class="col-lg-6 col-md-6 col-sm-6">
-							<div class="continue__btn">
-								<a href="product.jsp">더 보러가기</a>
-							</div>
+
 						</div>
 						<div class="col-lg-6 col-md-6 col-sm-6">
+							<div class="continue__btn">
+								<a style="float:right" href="selectAllP.do">더 보러가기</a>
+							</div>
+						<!-- 
 							<div class="continue__btn update__btn">
 								<a href="#"><i class="fa fa-cart-shopping"
 									style="color: white; display: inline-block;"></i>장바구니에 담기</a>
+						 -->
 							</div>							
 						</div>
 					</div>

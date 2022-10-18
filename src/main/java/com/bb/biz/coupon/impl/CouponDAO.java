@@ -17,21 +17,21 @@ public class CouponDAO {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
-	final String sql_insert="INSERT INTO COUPON(CID,CODE,DCRATE,CSTATUS,MID) "
-			+ "VALUES((SELECT NVL(MAX(CID),0)+1 FROM COUPON),?,?,?,?)";
+	final String sql_insert="INSERT INTO COUPON(CID,CODE,DCRATE,MID) "
+			+ "VALUES((SELECT NVL(MAX(CID),0)+1 FROM COUPON),?,?,?)";
 	
 
-	final String sql_updateCI="UPDATE COUPON SET CSTATUS=CSTATUS+1 WHERE CID=?";
-	final String sql_updateCD="UPDATE COUPON SET CSTATUS=CSTATUS-1 WHERE CID=?";
+	final String sql_updateCI="UPDATE COUPON SET CSTATUS=CSTATUS-1 WHERE CID=?";
+	final String sql_updateCD="UPDATE COUPON SET CSTATUS=CSTATUS+1 WHERE CID=?";
 	final String sql_selectOne="SELECT * FROM COUPON WHERE CID=?";
 	
 	
-	final String sql_selectAll="SELECT * FROM COUPON WHERE CSTATUS=0 ORDER BY CID ASC";
+	final String sql_selectAll="SELECT * FROM COUPON WHERE MID=? ORDER BY CID ASC";
 
 
 	boolean insertCoupon(CouponVO vo) {
 		if(vo.getCode()!=null) {
-			jdbcTemplate.update(sql_insert,vo.getCode(),vo.getDcrate(),vo.getCstatus(),vo.getMid());
+			jdbcTemplate.update(sql_insert,vo.getCode(),vo.getDcrate(),vo.getMid());
 			return true;
 		}
 		return false;
@@ -54,7 +54,7 @@ public class CouponDAO {
 		return jdbcTemplate.queryForObject(sql_selectOne,args,new CouponRowMapper());
 	}
 	List<CouponVO> selectAllCoupon(CouponVO vo){
-		return jdbcTemplate.query(sql_selectAll, new CouponRowMapper());
+		return jdbcTemplate.query(sql_selectAll, new CouponRowMapper(), vo.getMid());
 		
 	}
 	

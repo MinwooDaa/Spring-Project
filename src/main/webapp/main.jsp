@@ -14,13 +14,15 @@
     <meta name="keywords" content="Male_Fashion, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Male-Fashion | Template</title>
+    <title>PinaGunGong</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
     rel="stylesheet">
 
-    <!-- Css Styles -->
+    <!-- Css Styles -->     
+    <link rel="shorycut icon" href="img/pavi.png" type="image/png">
+	<link rel="apple-touch-icon" href="img/pavi.png">
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
@@ -86,11 +88,13 @@
             <div class="row product__filter">
             <!-- 상품 뽑아낼 반복문 위치 -->
             <c:forEach var="n" items="${products}" begin="1" end="20">
-                <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
+                <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals figure">
                     <div class="product__item">
                     <div class="product__item__pic set-bg" >
+                        <div  class="img" style="overflow:hidden;">
                         <a href="boardP.do?pid=${n.pid}">
                         <img src="${n.pimg}" alt="" width="280" height="280"></a>
+                        </div>
 		                   <ul class="product__hover">
 		                 <!-- 로그인 상태 -->
 						<c:if test="${member != null}">
@@ -175,9 +179,6 @@
     	  alert('로그인 후 이용해주세요.')
       }
    </script>
-<<<<<<< HEAD
-    
-    
      <script type="text/javascript">
 	$(document).ready(function(){
 		// 퀵메뉴 위치 제어
@@ -252,9 +253,6 @@
     enp('create', 'common', 'toyntech', { device: 'W' });    
     enp('send', 'common', 'toyntech');
 </script>
-    
-=======
->>>>>>> dd32d5ef57ea3e3c68326baeeb93d5087baf60f3
 </body>
 
 </html>
