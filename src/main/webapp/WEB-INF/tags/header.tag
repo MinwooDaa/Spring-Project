@@ -13,33 +13,21 @@
             <div class="offcanvas__links">
               <c:choose>
               	<c:when test="${member!=null }">                  
-              	  <a href="favorite.jsp"><i class="fa fa-heart" style="color:white;">찜목록</i></a>
-                  <a href="cart.jsp"><i class="fa fa-shopping-cart" style="color:white;">장바구니</i></a>
+              	  <a href="favorite.jsp"><i class="fa fa-heart" style="color:black;">찜목록</i></a>
+                  <a href="cart.jsp"><i class="fa fa-shopping-cart" style="color:black;">장바구니</i></a>
                   <a href="mypage.do">마이페이지</a>
                   <a href="logout.do">로그아웃</a>
                   </c:when>
                   <c:otherwise>
                   <a href="#" data-toggle="modal" data-target="#loginModal">로그인</a>
                   <a href="signUp.jsp">회원가입</a>
-                  <a href="cart.jsp"><i class="fa fa-shopping-cart" style="color:white;">장바구니</i></a>
+                  <a href="cart.jsp"><i class="fa fa-shopping-cart" style="color:black;">장바구니</i></a>
                   </c:otherwise>
               </c:choose>
             </div>
-            <div class="offcanvas__top__hover">
-                <span>Usd <i class="arrow_carrot-down"></i></span>
-                <ul>
-                    <li>USD</li>
-                    <li>EUR</li>
-                    <li>USD</li>
-                </ul>
-            </div>
+           
         </div>
-        <div class="offcanvas__nav__option">
-            <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                  <a href="favorite.jsp"><i class="fa fa-heart" style="color:white;">찜목록</i></a>
-                  <a href="cart.jsp"><i class="fa-shopping-cart" style="color:white;">장바구니</i></a>
-            <div class="price">$0.00</div>
-        </div>
+      
         <div id="mobile-menu-wrap"></div>
         <div class="offcanvas__text">
             <p>피규어나라🤖 건담공주👑</p>
@@ -56,6 +44,11 @@
                         <div class="header__top__left">
                             <p>피규어나라🤖 건담공주👑</p>
                         </div>
+                         <div class="header__top__left">
+                         <a href="https://github.com/T3AMBB/SpringProject" >
+                         <img src="./img/icon/gitlogo.png"/>
+                         </a>
+                         </div>
                     </div>
                     <div class="col-lg-6 col-md-5">
                         <div class="header__top__right">
@@ -74,7 +67,7 @@
                                 </c:otherwise>
                             </c:choose>
                             </div>
-                        </div>
+                        </div>           
                     </div>
                 </div>
             </div>
@@ -161,8 +154,8 @@
 	charset="utf-8"></script>
 <script>
 	var naverLogin = new naver.LoginWithNaverId({
-		clientId : "dSuSr97hQ_8Q6nsvdKk_", //내 애플리케이션 정보에 cliendId를 입력해줍니다.
-		callbackUrl : "http://localhost:8088/app1/naverLogin.jsp", // 내 애플리케이션 API설정의 Callback URL 을 입력해줍니다.
+		clientId : "_yxif3j955WIoRMM5ZX6", //내 애플리케이션 정보에 cliendId를 입력해줍니다.
+		callbackUrl : "http://pnggbb.duckdns.org/naverLogin.jsp", // 내 애플리케이션 API설정의 Callback URL 을 입력해줍니다.
 		isPopup : false,
 		callbackHandle : true
 	});
@@ -206,9 +199,6 @@
                                console.log('이메일:'+response.kakao_account.email);
                                console.log('닉네임:'+response.kakao_account.profile.nickname);
 //                                location.href="login.do?amid="+email;
-								alert(response.id);
-							   alert(email);
-							   alert(name);
 							   location.href ='kakaoLogin.do?mid='+ email+'&mname='+name+'&mpw='+mpw;
                            },
                            fail : function(error) {
